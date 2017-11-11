@@ -59,7 +59,7 @@ app.get('/thomas', (req,res) => {
 		}]
 	};
 
-	res.render('head', params);
+	res.render('main', params);
 });
 
 app.get('/user',(req,res) => {

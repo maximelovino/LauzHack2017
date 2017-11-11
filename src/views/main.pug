@@ -1,0 +1,102 @@
+include head.pug
+body
+    script(type="text/javascript").
+        $(document).ready(function() {
+
+            /* initialize the external events
+            -----------------------------------------------------------------*/
+
+            $('#external-events .mdl-navigation__link.ui-draggable.ui-draggable-handle').each(function() {
+                // store data so the calendar knows to render an event upon drop
+                $(this).data('event', {
+                    title: $.trim($(this).text()), // use the element's text as the event title
+                    stick: true, // maintain when user navigates (see docs on the renderEvent method)
+                });
+
+                // make the event draggable using jQuery UI
+                $(this).draggable({
+                    helper: 'clone',
+                    scroll: false,
+                    zIndex: 999,
+                    revert: true,      // will cause the event to go back to its
+                    revertDuration: 0  //  original position after the drag
+                });
+
+            });
+
+
+            /* initialize the calendar
+            -----------------------------------------------------------------*/
+
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'agendaWeek,agendaDay'
+                },
+                firstDay: moment().day(),
+                slotLabelFormat: 'H:mm', // uppercase H for 24-hour clock
+                defaultView: 'agendaWeek',
+                slotDuration: '00:15:00',
+                allDaySlot: false,
+                timeFormat: 'H:mm',
+                editable: true,
+                droppable: true, // this allows things to be dropped onto the calendar
+                eventResize: function(event, jsEvent, ui, view ){
+                    console.log("resize");
+                    console.log(event.start);
+                },
+                eventDrop: function(event, jsEvent, ui, view ){
+                    console.log("drag");
+                    console.log(event.start);
+                },
+                drop: function(date, jsEvent, ui, resourceId) {
+                    console.log(date);
+                }
+            });
+
+            $('.fc-toolbar').find('.fc-button').each(function() {
+                if($(this).text() === "today") {
+                    $(this).attr('class', 'fc-button fc-today-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect');
+                } else {
+                    $(this).attr('class', 'fc-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect');
+                }
+            });
+            
+            $('.fc-center h2').css('color', '#757575');
+
+        });
+    div(class="th-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header")
+        header(class="th-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600")
+            div(class="mdl-layout__header-row")
+                span(class="mdl-layout-title") Calendar
+                div(class="mdl-layout-spacer")
+                a(class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" href="settings" id="hdrbtn")
+                    i(class="material-icons") settings
+        
+        div(class="th-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50")
+            header(class="th-drawer-header")
+                img(src=`${USER_PICTURE_LINK}` class="th-avatar")
+                div(class="th-avatar-dropdown")
+                    span #{USER_NAME}
+                    div(class="mdl-layout-spacer")
+                div(class="mdl-textfield mdl-js-textfield mdl-textfield--expandable")
+                    label(class="mdl-button mdl-js-button mdl-button--icon" for="search")
+                        i(class="material-icons") search
+                    div(class="mdl-textfield__expandable-holder")
+                        input(class="mdl-textfield__input" type="text" id="search")
+                        label(class="mdl-textfield__label" for="search") Type your issue name
+                
+            nav(class="th-navigation mdl-navigation mdl-color--blue-grey-800" id="external-events")
+                each rep in REPS
+                    div(class="mdl-list__item") <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">folder</i> #{rep.name}
+                    each issue in rep.issues
+                        div(class="mdl-navigation__link ui-draggable ui-draggable-handle") <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">error_outline</i> #{issue.name} 
+                div(class="mdl-layout-spacer")
+                a(class="mdl-navigation__link" href=`${HELP_PAGE_URL}`) <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">help_outline</i><span class="visuallyhidden">Help</span>
+        
+        main(class="mdl-layout__content mdl-color--grey-100")
+            div(id='calendar')
+        
+        
+    script(src="https://code.getmdl.io/1.3.0/material.min.js")
