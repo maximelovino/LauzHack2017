@@ -15,10 +15,13 @@ html(lang="en")
         
         link(rel="shortcut icon" href="images/favicon.png")
         
-        link(rel='stylesheet' href='fullcalendar/fullcalendar.css')
-        script(src='fullcalendar/lib/jquery.min.js')
-        script(src='fullcalendar/lib/moment.min.js')
-        script(src='fullcalendar/fullcalendar.js')
+        link(href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.css' rel='stylesheet')
+        link(href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.print.css' rel='stylesheet' media='print')
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js")
+        script(src="http://code.jquery.com/jquery-3.2.1.min.js")
+        script(src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js")
+
+        script(src=' https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.6.2/fullcalendar.min.js')
         
         link(rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en")
         link(rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons")
@@ -27,14 +30,60 @@ html(lang="en")
 
         script(type="text/javascript").
             $(document).ready(function() {
+
+
+                /* initialize the external events
+                -----------------------------------------------------------------*/
+
+                $('#external-events .mdl-navigation__link.ui-draggable.ui-draggable-handle').each(function() {
+                    // store data so the calendar knows to render an event upon drop
+                    $(this).data('event', {
+                        title: $.trim($(this).text()), // use the element's text as the event title
+                        stick: true // maintain when user navigates (see docs on the renderEvent method)
+                        
+                    });
+
+                    // make the event draggable using jQuery UI
+                    $(this).draggable({
+                        helper: 'clone',
+                        scroll: false,
+                        zIndex: 999,
+                        revert: true,      // will cause the event to go back to its
+                        revertDuration: 0  //  original position after the drag
+                    });
+
+                });
+
+
+                /* initialize the calendar
+                -----------------------------------------------------------------*/
+
                 $('#calendar').fullCalendar({
-                    defaultView: 'basicWeek',
                     header: {
-                        left: '',
-                        center: '',
-                        right: ''
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'agendaWeek,agendaDay'
+                    },
+                    firstDay: moment().day(),
+                    slotLabelFormat: 'H:mm', // uppercase H for 24-hour clock
+                    defaultView: 'agendaWeek',
+                    slotDuration: '00:15:00',
+                    allDaySlot: false,
+                    editable: true,
+                    droppable: true, // this allows things to be dropped onto the calendar
+                    eventResize: function(event, jsEvent, ui, view ){
+                        console.log("resize");
+                        console.log(event.start);
+                    },
+                    eventDrop: function(event, jsEvent, ui, view ){
+                        console.log("drag");
+                        console.log(event.start);
+                    },
+                    drop: function(date, jsEvent, ui, resourceId) {
+                        console.log(date);
                     }
-                })
+                });
+
 
             });
     body
@@ -61,11 +110,11 @@ html(lang="en")
                         span #{USER_NAME}
                         div(class="mdl-layout-spacer")
                     
-                nav(class="th-navigation mdl-navigation mdl-color--blue-grey-800")
+                nav(class="th-navigation mdl-navigation mdl-color--blue-grey-800" id="external-events")
                     each rep in REPS
                         div(class="mdl-list__item") <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">folder</i> #{rep.name}
                         each issue in rep.issues
-                            a(class="mdl-navigation__link" href="#") <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">inbox</i> #{issue.name} 
+                            div(class="mdl-navigation__link ui-draggable ui-draggable-handle") <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">inbox</i> #{issue.name} 
                     div(class="mdl-layout-spacer")
                     a(class="mdl-navigation__link" href=`${HELP_PAGE_URL}`) <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">help_outline</i><span class="visuallyhidden">Help</span>
             
