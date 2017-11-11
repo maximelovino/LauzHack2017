@@ -54,6 +54,10 @@ app.get('/thomas', (req,res) => {
 	res.render('main', params);
 });
 
+app.get('/config', (req, res) => {
+    res.render('config');
+});
+
 app.get('/user',(req,res) => {
     if (!req.session.access_token){
         console.log("NO TOKEN");
@@ -61,6 +65,10 @@ app.get('/user',(req,res) => {
     }else{
         github.getConnectedUser(req,res);
     }
+});
+
+app.get('/randomData', (req, res) => {
+
 });
 
 app.get('/auth-callback', (req, res) => {

@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 
 const DB_USER = "taskhub";
-const DB_PASSWORD = "supertask";
+const DB_PASSWORD = "supertaskhub";
 const DB_NAME = "taskhub";
 
 const mySQLOptions = {
@@ -21,7 +21,42 @@ exports.getUser = (id) => {
             throw error;
         } else {
             console.log(results);
-            console.log(fields);
+            return results;
+        }
+    });
+};
+
+exports.getWork = (user_id) => {
+    let sql = "SELECT * FROM users_issues WHERE user_id = ?";
+    connection.query(sql, [id], (error, results, fields) => {
+        if(error) {
+            throw error;
+        } else {
+            console.log(results);
+            return results;
+        }
+    });
+};
+
+exports.insertWork = (user_id, issue_id, start, end) => {
+    let sql = "INSERT INTO users_issues VALUES(?, ?, ?, ?)";
+    connection.query(sql, [user_id, issue_id, start, end], (error, results, fields) => {
+        if(error) {
+            throw error;
+        } else {
+            console.log(results);
+            return results;
+        }
+    });
+};
+
+exports.updateWork = (user_id, issue_id, old_start, start, end) => {
+    let sql = "UPDATE users_issues SET start = ?, end = ? WHERE user_id = ?, issue_id = ?, start = ?";
+    connection.query(sql, [start, end, user_id, issue_id, old_start], (error, results, fields) => {
+        if(error) {
+            throw error;
+        } else {
+            console.log(results);
             return results;
         }
     });
