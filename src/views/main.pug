@@ -7,11 +7,22 @@ body
             -----------------------------------------------------------------*/
 
             $('#external-events .mdl-navigation__link.ui-draggable.ui-draggable-handle').each(function() {
+                var repo = $(this).prevAll('.mdl-list__item:first').contents().filter(function(a) {
+                    return a === 1;
+                }).text();
+                var name = $(this).contents().filter(function (a) {
+                    return a === 1;
+                }).text();
                 // store data so the calendar knows to render an event upon drop
                 $(this).data('event', {
-                    title: $.trim($(this).text()), // use the element's text as the event title
+                    repo: repo,
+                    name: name,
+                    title: repo + "/" + name, // use the element's text as the event title
                     stick: true, // maintain when user navigates (see docs on the renderEvent method)
+
                 });
+                $(this).data('repo', repo);
+                $(this).data('name', name);
 
                 // make the event draggable using jQuery UI
                 $(this).draggable({
@@ -44,14 +55,20 @@ body
                 droppable: true, // this allows things to be dropped onto the calendar
                 eventResize: function(event, jsEvent, ui, view ){
                     console.log("resize");
-                    console.log(event.start);
+                    console.log(event);
                 },
                 eventDrop: function(event, jsEvent, ui, view ){
                     console.log("drag");
-                    console.log(event.start);
+                    console.log(event);
                 },
                 drop: function(date, jsEvent, ui, resourceId) {
-                    console.log(date);
+                    console.log($(this).data('repo'));
+                    console.log($(this).data('name'));
+                    console.log(date.format('YYYY/MM/DD HH:mm:ss'));
+                    console.log(date.clone().add(2, 'hours').format('YYYY/MM/DD HH:mm:ss'));
+
+
+
                 }
             });
 
