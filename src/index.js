@@ -2,29 +2,17 @@ const express = require('express');
 const request = require('request');
 const app = express();
 const session = require('express-session');
-const mysql = require('mysql');
 const cookieParser = require('cookie-parser');
 //const mysqlSessionStore = require('express-mysql-session')(session);
 const fs = require('fs');
 const github = require('./controllers/github');
-
-const DB_USER = "taskhub";
-const DB_PASSWORD = "supertask";
-const DB_NAME = "taskhub";
+const db = require('./controllers/sql');
 
 app.set('view engine', 'pug');
 app.set('view options', {"pretty":true});
 app.locals.pretty = true;
 
-const mySQLOptions = {
-    host: 'localhost',
-    port: 3306,
-    user: DB_USER,
-    password: DB_PASSWORD,
-    database: DB_NAME,
-};
 
-var connection = mysql.createConnection(mySQLOptions);
 app.use(cookieParser());
 app.use(session({
     key: 'session_cookie_name',
@@ -44,6 +32,10 @@ app.get('/', (req, res) => {
 	}else{
 		res.render('home', {"clientID": github.clientID})
 	}
+});
+
+app.get('/testsql', (req, res) => {
+    db.getUser(0);
 });
 
 app.get('/thomas', (req,res) => {
