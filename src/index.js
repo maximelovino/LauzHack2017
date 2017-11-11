@@ -41,10 +41,10 @@ app.get('/testsql', (req, res) => {
 app.get('/thomas', (req,res) => {
 	github.getConnectedUser(req,(user) => {
 		github.getIssuesByRepo(req, (issuesByRep) => {
-			params = {
+			let params = {
 				'user': user,
 				'repos': issuesByRep
-			}
+			};
 			res.render('main', params);
 		})
 	});

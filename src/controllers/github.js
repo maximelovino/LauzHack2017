@@ -105,7 +105,7 @@ function getRepos(req,callbackForRepos){
 exports.getRepos = getRepos;
 
 
-function getIssuesForARepo(req,i,repo, callBackForIssuesForRepo){
+function getIssuesForARepo(req, i, repo, callBackForIssuesForRepo){
 	let issues = [];
 
 	function getOnePage(url, callback){
