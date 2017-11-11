@@ -39,19 +39,15 @@ app.get('/testsql', (req, res) => {
 });
 
 app.get('/thomas', (req,res) => {
-	const params = {
-		USER_PICTURE_LINK: 'https://assets-cdn.github.com/images/modules/logos_page/Octocat.png',
-		USER_NAME: 'TOTO',
-		REPS: [{
-			name:'repo 1',
-			issues: [{name: 'issue 1'},{name: 'issue 2'}],
-		},{
-			name: 'repo 2',
-			issues: [{name: 'issue 1'},{name: 'issue 2'}],
-		}]
-	};
-
-	res.render('main', params);
+	github.getConnectedUser(req,(user) => {
+		github.getIssuesByRepo(req, (issuesByRep) => {
+			params = {
+				'user': user,
+				'repos': issuesByRep
+			}
+			res.render('main', params);
+		})
+	});
 });
 
 app.get('/config', (req, res) => {
@@ -63,8 +59,35 @@ app.get('/user',(req,res) => {
         console.log("NO TOKEN");
         res.redirect('/');
     }else{
-        github.getConnectedUser(req,res);
+        github.getConnectedUser(req,(body) => {
+			res.contentType('application/json');
+			res.send(body);
+		});
     }
+});
+
+app.get('/repos', (req,res) => {
+	if (!req.session.access_token){
+        console.log("NO TOKEN");
+        res.redirect('/');
+    }else{
+        github.getRepos(req,(body) => {
+			res.contentType('application/json');
+			res.send(body);
+		});
+    }
+});
+
+app.get('/issues', (req,res) => {
+	if (!req.session.access_token){
+		console.log("NO TOKEN");
+		res.redirect('/');
+	}else{
+		github.getIssuesByRepo(req,(body) => {
+			res.contentType('application/json');
+			res.send(body);
+		});
+	}
 });
 
 app.get('/randomData', (req, res) => {
