@@ -26,50 +26,50 @@ exports.getUser = (id) => {
     });
 };
 
-exports.getWork = (user_id) => {
+exports.getWork = (user_id, callback) => {
     let sql = "SELECT * FROM users_issues WHERE user_id = ?";
-    connection.query(sql, [id], (error, results, fields) => {
+    connection.query(sql, [user_id], (error, results, fields) => {
         if(error) {
             throw error;
         } else {
             console.log(results);
-            return results;
+            callback(results);
         }
     });
 };
 
-exports.insertWork = (user_id, issue_id, start, end) => {
+exports.insertWork = (user_id, issue_id, start, end, callback) => {
     let sql = "INSERT INTO users_issues VALUES(?, ?, ?, ?)";
     connection.query(sql, [user_id, issue_id, start, end], (error, results, fields) => {
         if(error) {
             throw error;
         } else {
             console.log(results);
-            return results;
+            callback(results);
         }
     });
 };
 
-exports.updateWork = (user_id, issue_id, old_start, start, end) => {
+exports.updateWork = (user_id, issue_id, old_start, start, end, callback) => {
     let sql = "UPDATE users_issues SET start = ?, end = ? WHERE user_id = ?, issue_id = ?, start = ?";
     connection.query(sql, [start, end, user_id, issue_id, old_start], (error, results, fields) => {
         if(error) {
             throw error;
         } else {
             console.log(results);
-            return results;
+            callback(results);
         }
     });
 };
 
-exports.deleteWork = (user_id, issue_id, old_start) => {
+exports.deleteWork = (user_id, issue_id, old_start, callback) => {
     let sql = "DELETE FROM users_issues WHERE user_id = ?, issue_id = ?, start = ?";
     connection.query(sql, [user_id, issue_id, old_start], (error, results, fields) => {
         if(error) {
             throw error;
         } else {
             console.log(results);
-            return results;
+            callback(results);
         }
     });
 };

@@ -30,12 +30,18 @@ app.get('/', (req, res) => {
 	if (req.session.access_token){
 		github.getConnectedUser(req,(user) => {
 			github.getIssuesByRepo(req, (issuesByRep) => {
-				console.log(user);
-				let params = {
-					'user': user,
-					'repos': issuesByRep
-				};
-				res.render('main', params);
+				db.getWork(user.id, (work) => {
+                    console.log(user);
+                    console.log(JSON.stringify(work));
+                    let params = {
+                        'user': user,
+                        'repos': issuesByRep,
+                        'work': JSON.stringify(work)
+                    };
+                    // console.log(params.work);
+                    res.render('main', params);
+				});
+
 			})
 		});
 	}else{

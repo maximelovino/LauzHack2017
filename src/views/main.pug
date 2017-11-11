@@ -1,7 +1,10 @@
 include head.pug
 body
+    - console.log(work);
     script(type="text/javascript").
         $(document).ready(function() {
+            let test = !{work};
+            console.log(test);
 
             /* initialize the external events
             -----------------------------------------------------------------*/
@@ -13,6 +16,7 @@ body
                 var name = $(this).contents().filter(function (a) {
                     return a === 1;
                 }).text();
+
                 // store data so the calendar knows to render an event upon drop
                 $(this).data('event', {
                     repo: repo,
@@ -40,6 +44,7 @@ body
             -----------------------------------------------------------------*/
 
             $('#calendar').fullCalendar({
+
                 header: {
                     left: 'prev,next today',
                     center: 'title',
