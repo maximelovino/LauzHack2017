@@ -46,6 +46,22 @@ app.get('/', (req, res) => {
 	}
 });
 
+app.get('/thomas', (req,res) => {
+	const params = {
+		USER_PICTURE_LINK: 'https://assets-cdn.github.com/images/modules/logos_page/Octocat.png',
+		USER_NAME: 'TOTO',
+		REPS: [{
+			name:'repo 1',
+			issues: [{name: 'issue 1'},{name: 'issue 2'}],
+		},{
+			name: 'repo 2',
+			issues: [{name: 'issue 1'},{name: 'issue 2'}],
+		}]
+	};
+
+	res.render('head', params);
+});
+
 app.get('/user',(req,res) => {
     if (!req.session.access_token){
         console.log("NO TOKEN");
