@@ -12,9 +12,9 @@ const DB_PASSWORD = "supertask";
 const DB_NAME = "taskhub";
 
 app.set('view engine', 'pug');
-
+/*
 const mySQLOptions = {
-    host: '192.33.206.63',
+    host: 'localhost',
     port: 3306,
     user: DB_USER,
     password: DB_PASSWORD,
@@ -31,6 +31,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
+*/
 
 app.use('/material', express.static(__dirname + '/node_modules/material-components-web/dist/'));
 app.use('/scripts', express.static(__dirname + '/scripts/'));
