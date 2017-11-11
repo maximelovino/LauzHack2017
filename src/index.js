@@ -1,18 +1,21 @@
 const express = require('express');
+const request = require('request');
 const app = express();
 const session = require('express-session');
 const mysql = require('mysql');
-const mysqlSessionStore = require('express-mysql-session')(session);
-
-const GITHUB_ID = "6e85086080f66fc74a25";
-const GITHUB_SECRET = "424fa389d55ee395f3ad6870d9847730cecfbf3e";
+const cookieParser = require('cookie-parser');
+//const mysqlSessionStore = require('express-mysql-session')(session);
+const fs = require('fs');
+const github = require('./controllers/github');
 
 const DB_USER = "taskhub";
 const DB_PASSWORD = "supertask";
 const DB_NAME = "taskhub";
 
 app.set('view engine', 'pug');
-/*
+app.set('view options', {"pretty":true});
+app.locals.pretty = true;
+
 const mySQLOptions = {
     host: 'localhost',
     port: 3306,
@@ -22,29 +25,39 @@ const mySQLOptions = {
 };
 
 var connection = mysql.createConnection(mySQLOptions);
-var sessionStore = new mysqlSessionStore({}, connection);
-
+app.use(cookieParser());
 app.use(session({
     key: 'session_cookie_name',
     secret: 'session_cookie_secret',
-    store: sessionStore,
     resave: false,
     saveUninitialized: false
 }));
-*/
 
 app.use('/material', express.static(__dirname + '/node_modules/material-components-web/dist/'));
 app.use('/scripts', express.static(__dirname + '/scripts/'));
 app.use('/css', express.static(__dirname + '/css/'));
+app.use('/fullcalendar', express.static(__dirname + '/node_modules/fullcalendar/dist/'));
 
 app.get('/', (req, res) => {
-    res.render('home', {"clientID": GITHUB_ID})
+	if (req.session.access_token){
+		res.render('authenticated',{'token':req.session.access_token})
+	}else{
+		res.render('home', {"clientID": github.clientID})
+	}
 });
 
-app.get('auth-callback', (req,res) => {
-    res.render(JSON.stringify(req));
+app.get('/user',(req,res) => {
+    if (!req.session.access_token){
+        console.log("NO TOKEN");
+        res.redirect('/');
+    }else{
+        github.getConnectedUser(req,res);
+    }
 });
 
+app.get('/auth-callback', (req, res) => {
+    github.getTokenAndStore(req,res);
+});
 
 app.listen(3000, () => {
     console.log("Listening on http://localhost:3000");
