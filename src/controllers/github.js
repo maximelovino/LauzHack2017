@@ -46,7 +46,7 @@ exports.getConnectedUser = (req,callback) => {
 	request(requestOptions, (error, response, body) =>{
 		if(!error && response.statusCode == 200){
 			console.log(body);
-			callback(body);
+			callback(JSON.parse(body));
 		} else {
 			console.error("PROBLEM getting user");
 			console.log(body);

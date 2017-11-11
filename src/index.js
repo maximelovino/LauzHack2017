@@ -28,9 +28,18 @@ app.use('/fullcalendar', express.static(__dirname + '/node_modules/fullcalendar/
 
 app.get('/', (req, res) => {
 	if (req.session.access_token){
-		res.render('authenticated',{'token':req.session.access_token})
+		github.getConnectedUser(req,(user) => {
+			github.getIssuesByRepo(req, (issuesByRep) => {
+				console.log(user);
+				let params = {
+					'user': user,
+					'repos': issuesByRep
+				};
+				res.render('main', params);
+			})
+		});
 	}else{
-		res.render('home', {"clientID": github.clientID})
+		res.render('authenticate', {"clientID": github.clientID})
 	}
 });
 
@@ -41,6 +50,7 @@ app.get('/testsql', (req, res) => {
 app.get('/thomas', (req,res) => {
 	github.getConnectedUser(req,(user) => {
 		github.getIssuesByRepo(req, (issuesByRep) => {
+		    console.log(user);
 			let params = {
 				'user': user,
 				'repos': issuesByRep
