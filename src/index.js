@@ -7,12 +7,13 @@ const cookieParser = require('cookie-parser');
 const fs = require('fs');
 const github = require('./controllers/github');
 const db = require('./controllers/sql');
+const bodyParser = require('body-parser');
 
 app.set('view engine', 'pug');
 app.set('view options', {"pretty":true});
 app.locals.pretty = true;
 
-
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(session({
     key: 'session_cookie_name',
@@ -47,6 +48,43 @@ app.get('/', (req, res) => {
 	}else{
 		res.render('authenticate', {"clientID": github.clientID})
 	}
+});
+
+app.post('/work', (req, res) => {
+    console.log(req.body.issue_id);
+    console.log(req.body.start);
+    console.log(req.body.end);
+    github.getConnectedUser(req, (user) => {
+    	console.log(user.id);
+        db.insertWork(user.id, req.body.issue_id, req.body.start, req.body.end, (result) =>{
+            console.log(result);
+            res.sendStatus(200);
+        });
+	});
+
+});
+
+app.put('/work/:user_id/:issue_id/:old_start/:start/:end', (req, res) => {
+    console.log(req.params('user_id'));
+    console.log(req.params('issue_id'));
+    console.log(req.params('old_start'));
+    console.log(req.params('start'));
+    console.log(req.params('end'));
+    db.updateWork(req.params('user_id'), req.params('issue_id'), req.params('old_start'), req.params('start'), req.params('end'), 	(result) => {
+    	console.log(result);
+        res.sendStatus(200);
+	});
+
+});
+
+app.delete('/work/:user_id/:issue_id/:old_start', (req, res) => {
+	console.log(req.params('user_id'));
+	console.log(req.params('issue_id'));
+	console.log(req.params('old_start'));
+	db.deleteWork(req.params('user_id'), req.params('issue_id'), req.params('old_start'), (result) => {
+		console.log(result);
+		res.sendStatus(200);
+	});
 });
 
 app.get('/testsql', (req, res) => {

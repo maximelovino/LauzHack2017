@@ -15,6 +15,7 @@
 	"author": "Maxime Lovino, Thomas Ibanez and Marco Lopes",
 	"license": "ISC",
 	"dependencies": {
+		"body-parser": "^1.18.2",
 		"cookie-parser": "^1.4.3",
 		"express": "^4.16.2",
 		"express-mysql-session": "^1.2.2",
