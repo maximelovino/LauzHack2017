@@ -12,7 +12,7 @@ const mySQLOptions = {
     database: DB_NAME,
 };
 
-var connection = mysql.createConnection(mySQLOptions);
+let connection = mysql.createConnection(mySQLOptions);
 
 exports.getUser = (id) => {
     let sql = "SELECT * FROM users WHERE id = ?";
@@ -53,6 +53,18 @@ exports.insertWork = (user_id, issue_id, start, end) => {
 exports.updateWork = (user_id, issue_id, old_start, start, end) => {
     let sql = "UPDATE users_issues SET start = ?, end = ? WHERE user_id = ?, issue_id = ?, start = ?";
     connection.query(sql, [start, end, user_id, issue_id, old_start], (error, results, fields) => {
+        if(error) {
+            throw error;
+        } else {
+            console.log(results);
+            return results;
+        }
+    });
+};
+
+exports.deleteWork = (user_id, issue_id, old_start) => {
+    let sql = "DELETE FROM users_issues WHERE user_id = ?, issue_id = ?, start = ?";
+    connection.query(sql, [user_id, issue_id, old_start], (error, results, fields) => {
         if(error) {
             throw error;
         } else {
