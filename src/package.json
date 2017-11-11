@@ -1,0 +1,25 @@
+{
+	"name": "taskhub.io",
+	"version": "1.0.0",
+	"description": "A planner for your Github Issues",
+	"main": "index.js",
+	"scripts": {
+		"start": "nodemon index.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [
+		"github",
+		"issues",
+		"javascript"
+	],
+	"author": "Maxime Lovino, Thomas Ibanez and Marco Lopes",
+	"license": "ISC",
+	"dependencies": {
+		"express": "^4.16.2",
+		"fullcalendar": "^3.6.2",
+		"material-components-web": "^0.24.0",
+		"nodemon": "^1.12.1",
+		"pug": "^2.0.0-rc.4",
+		"request": "^2.83.0"
+	}
+}
