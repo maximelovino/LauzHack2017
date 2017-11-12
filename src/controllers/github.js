@@ -168,3 +168,28 @@ exports.getIssuesByRepo = (req, callbackForIssues) => {
 	}
 	getRepos(req,fromRepos);
 };
+
+exports.postUselessData = (req,callback) => {
+    const requestOptions = {
+        method: 'POST',
+        uri: 'https://api.github.com/repos/maximelovino/LauzHack2017/issues',
+        headers:{
+            'Authorization': `Bearer ${req.session.access_token}`,
+            'User-agent': "Taskhub-app",
+        },
+		body :JSON.stringify({
+        	"title": "teferst",
+			"body": "yo idfst's a test",
+		})
+    };
+
+    request(requestOptions, (error, response, body) =>{
+        if(!error && response.statusCode == 200){
+            callback(JSON.parse(body));
+        } else {
+            console.error("PROBLEM post useless data");
+            console.log(body);
+            console.log(response);
+        }
+    });
+};
