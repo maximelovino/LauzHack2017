@@ -32,8 +32,8 @@ html(lang="en")
                             start: moment(item.start),
                             end: moment(item.end),
                             issue_id: parseInt(item.issue_id),
-                            duration: moment(item.end).subtract(item.start)
-
+                            duration: moment(item.end).subtract(item.start),
+                            backgroundColor: issue.labels.length === 0? '#00BCD4' : '#'+issue.labels[0].color,
                         });
                     }
                 });
@@ -48,14 +48,14 @@ html(lang="en")
                     var name = $(this).contents().filter(function (a) {
                         return a === 1;
                     }).text();
+
                     // store data so the calendar knows to render an event upon drop
-                    console.log($(this).data('id'));
                     $(this).data('event', {
                         issue_id: parseInt($(this).data('id')),
                         duration: moment('2:00:00'),
                         title: repo + "/" + name, // use the element's text as the event title
                         stick: true, // maintain when user navigates (see docs on the renderEvent method)
-
+                        backgroundColor: $(this).data('color'),
                     });
                     //$(this).data('repo', repo);
                     //$(this).data('name', name);
@@ -204,7 +204,7 @@ html(lang="en")
                 $('.fc-center h2').css('color', '#757575');
 
             });
-        div(class="th-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header")
+        div(class="th-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header main")
             header(class="th-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600")
                 div(class="mdl-layout__header-row")
                     span(class="mdl-layout-title") Calendar
@@ -229,7 +229,7 @@ html(lang="en")
                     each rep in repos
                         div(class="mdl-list__item" id=`${rep.repo.name}`) <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">folder</i>#{rep.repo.name}
                         each issue in rep.issues
-                            div(class=`mdl-navigation__link ui-draggable ui-draggable-handle ${rep.repo.name}` data-id=`${issue.id}`) <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">error_outline</i>#{issue.title}
+                            div(class=`mdl-navigation__link ui-draggable ui-draggable-handle ${rep.repo.name}` data-id=`${issue.id}` data-color=`${issue.labels.length == 0 ? '#00BCD4' : '#'+issue.labels[0].color}`) <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">error_outline</i>#{issue.title}
                     div(class="mdl-layout-spacer")
                     a(class="mdl-navigation__link" href=`${HELP_PAGE_URL}`) <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">help_outline</i><span class="visuallyhidden">Help</span>
 
