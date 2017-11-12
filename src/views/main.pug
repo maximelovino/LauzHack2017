@@ -33,6 +33,7 @@ html(lang="en")
                             start: moment(item.start),
                             end: moment(item.end),
                             issue_id: parseInt(item.issue_id),
+                            issue_url: issue.html_url,
                             duration: moment(item.end).subtract(item.start),
                             backgroundColor: issue.labels.length === 0? '#00BCD4' : '#'+issue.labels[0].color,
                         });
@@ -53,6 +54,7 @@ html(lang="en")
                     // store data so the calendar knows to render an event upon drop
                     $(this).data('event', {
                         issue_id: parseInt($(this).data('id')),
+                        issue_url: $(this).data('git_url'),
                         duration: moment('2:00:00'),
                         title: repo + "/" + name, // use the element's text as the event title
                         stick: true, // maintain when user navigates (see docs on the renderEvent method)
@@ -195,6 +197,8 @@ html(lang="en")
                             });
                     },
                     eventRender: function (event, element) {
+                        element.find('.fc-bg').wrap(`<a class="gitLink" href=${event.issue_url} target="_blank"></a>`);
+                        element.find('.fc-title').wrap(`<a class="gitLink" href=${event.issue_url} target="_blank"></a>`);
                         element.find('.fc-content').prepend("<i class=\"material-icons closeon\">close</i>");
                         element.find(".closeon").click(function () {
                             console.log(event);
@@ -259,7 +263,7 @@ html(lang="en")
                     each rep in repos
                         div(class="mdl-list__item" id=`${rep.repo.name}`) <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">code</i>#{rep.repo.name}
                         each issue in rep.issues
-                            div(class=`mdl-navigation__link ui-draggable ui-draggable-handle ${rep.repo.name}` data-id=`${issue.id}` data-color=`${issue.labels.length == 0 ? '#00BCD4' : '#'+issue.labels[0].color}`) <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">error_outline</i>#{issue.title}
+                            div(class=`mdl-navigation__link ui-draggable ui-draggable-handle ${rep.repo.name}` data-id=`${issue.id}` data-git_url=`${issue.html_url}` data-color=`${issue.labels.length == 0 ? '#00BCD4' : '#'+issue.labels[0].color}`) <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">error_outline</i>#{issue.title}
                     div(class="mdl-layout-spacer")
                     a(class="mdl-navigation__link" href=`${HELP_PAGE_URL}`) <i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">help_outline</i><span class="visuallyhidden">Help</span>
 

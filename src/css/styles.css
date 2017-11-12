@@ -122,3 +122,8 @@ html, body {
     font-size: 18px;
     float: right;
 }
+
+a.gitLink{
+    color: inherit;
+    text-decoration: none;
+}

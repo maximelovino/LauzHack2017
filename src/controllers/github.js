@@ -5,7 +5,7 @@ const GITHUB_SECRET = "424fa389d55ee395f3ad6870d9847730cecfbf3e";
 
 exports.clientID = GITHUB_ID;
 
-exports.getTokenAndStore = (req,res) => {
+exports.getTokenAndStore = (req,callback) => {
 	const githubCode = req.query.code;
 
 	const requestOptions = {
@@ -24,8 +24,7 @@ exports.getTokenAndStore = (req,res) => {
 	request(requestOptions,(error,response,body) => {
 		if (!error && response.statusCode == 200) {
 			const token = JSON.parse(body).access_token;
-			req.session.access_token = token;
-			res.redirect('/')
+			callback(token);
 		} else {
 			console.error("PROBLEM getting the token");
 		}

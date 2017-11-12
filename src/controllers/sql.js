@@ -41,7 +41,7 @@ exports.getUser = (id, callback) => {
     let sql = "SELECT * FROM users WHERE id = ?";
     connection.query(sql, [id], (error, results, fields) => {
         if(error) {
-            throw error;
+            console.log(error);
         } else {
             console.log(results[0]);
             callback(results[0]);
@@ -53,7 +53,7 @@ exports.getWork = (user_id, callback) => {
     let sql = "SELECT * FROM users_issues WHERE user_id = ?";
     connection.query(sql, [user_id], (error, results, fields) => {
         if(error) {
-            throw error;
+            console.log(error);
         } else {
             console.log(results);
             callback(results);
@@ -65,7 +65,7 @@ exports.insertWork = (user_id, issue_id, start, end, callback) => {
     let sql = "INSERT INTO users_issues VALUES(?, ?, ?, ?)";
     connection.query(sql, [user_id, issue_id, start, end], (error, results, fields) => {
         if(error) {
-            throw error;
+            console.log(error);
         } else {
             console.log(results);
             callback(results);
@@ -78,7 +78,7 @@ exports.updateWork = (user_id, issue_id, old_start, start, end, callback) => {
     console.log([start, end, user_id, issue_id, old_start]);
     connection.query(sql, [start, end, user_id, issue_id, old_start], (error, results, fields) => {
         if(error) {
-            throw error;
+            console.log(error);
         } else {
             console.log(results);
             callback(results);
@@ -90,7 +90,7 @@ exports.deleteWork = (user_id, issue_id, start, callback) => {
     let sql = "DELETE FROM users_issues WHERE user_id = ? AND issue_id = ? AND start = ?";
     connection.query(sql, [user_id, issue_id, start], (error, results, fields) => {
         if(error) {
-            throw error;
+            console.log(error);
         } else {
             console.log(results);
             callback(results);

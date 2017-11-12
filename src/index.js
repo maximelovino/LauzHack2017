@@ -84,23 +84,6 @@ app.delete('/work', (req, res) => {
 
 });
 
-app.get('/testsql', (req, res) => {
-    db.getUser(0);
-});
-
-app.get('/thomas', (req,res) => {
-	github.getConnectedUser(req,(user) => {
-		github.getIssuesByRepo(req, (issuesByRep) => {
-		    console.log(user);
-			let params = {
-				'user': user,
-				'repos': issuesByRep
-			};
-			res.render('main', params);
-		})
-	});
-});
-
 app.get('/settings', (req, res) => {
     if (!req.session.access_token){
     	res.redirect('/');
@@ -128,7 +111,7 @@ app.post('/settings', (req,res) => {
 		})
 	}
 });
-
+/*
 app.get('/user',(req,res) => {
     if (!req.session.access_token){
         console.log("NO TOKEN");
@@ -163,14 +146,13 @@ app.get('/issues', (req,res) => {
 			res.send(body);
 		});
 	}
-});
-
-app.get('/randomData', (req, res) => {
-
-});
+});*/
 
 app.get('/auth-callback', (req, res) => {
-    github.getTokenAndStore(req,res);
+    github.getTokenAndStore(req,(token) => {
+		req.session.access_token = token;
+		res.redirect('/');
+	});
 });
 
 app.listen(3000, () => {
