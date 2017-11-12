@@ -117,3 +117,8 @@ html, body {
 .homepage-center{
     text-align: center;
 }
+
+.closeon {
+    font-size: 18px;
+    float: right;
+}

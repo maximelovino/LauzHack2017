@@ -195,7 +195,7 @@ html(lang="en")
                             });
                     },
                     eventRender: function (event, element) {
-                        element.find('.fc-content').prepend("<i class=\"material-icons closeon\">delete</i>");
+                        element.find('.fc-content').prepend("<i class=\"material-icons closeon\">close</i>");
                         element.find(".closeon").click(function () {
                             console.log(event);
                             $.ajax({
