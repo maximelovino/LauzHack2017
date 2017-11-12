@@ -1,7 +1,8 @@
 const request = require('request');
+require('dotenv').config({path: "github.env"});
 
-const GITHUB_ID = "6e85086080f66fc74a25";
-const GITHUB_SECRET = "424fa389d55ee395f3ad6870d9847730cecfbf3e";
+const GITHUB_ID = process.env.GITHUB_ID;
+const GITHUB_SECRET = process.env.GITHUB_SECRET;
 
 exports.clientID = GITHUB_ID;
 
