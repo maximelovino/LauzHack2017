@@ -4,7 +4,7 @@
 	"description": "A planner for your Github Issues",
 	"main": "index.js",
 	"scripts": {
-		"start": "nodemon index.js",
+		"start": "forever start index.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [
@@ -21,6 +21,7 @@
 		"express": "^4.16.2",
 		"express-mysql-session": "^1.2.2",
 		"express-session": "^1.15.6",
+		"forever": "^0.15.3",
 		"fs": "0.0.1-security",
 		"fullcalendar": "^3.6.2",
 		"material-components-web": "^0.24.0",
