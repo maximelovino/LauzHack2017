@@ -113,3 +113,7 @@ html, body {
 .center-card {
     margin: auto;
 }
+
+.homepage-center{
+    text-align: center;
+}

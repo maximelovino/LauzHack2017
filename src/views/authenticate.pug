@@ -1,14 +1,14 @@
 include head.pug
 body
-    div(class="th-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header")
+    div(class="th-layout mdl-layout mdl-js-layout mdl-layout--fixed-header")
         header(class="th-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600")
             div(class="mdl-layout__header-row")
                 span(class="mdl-layout-title") TaskHub
         main(class="mdl-layout mdl-color--grey-100")
-            div.mdl-grid
-                div.mdl-layout-spacer
-                div.mdl-cell.mdl-cell--12-col
-                    h1 Welcome to TaskHub
-                        h3 You have to authenticate on Github
-                        a(href=`https://github.com/login/oauth/authorize?scope=read:user%20repo&client_id=${clientID}`).mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect.mdl-button--accent Authenticate
-                div.mdl-layout-spacer
+            div.homepage-center
+                h1.homepage-center Welcome to TaskHub
+                h3.homepage-center You have to authenticate on Github
+                a(href=`https://github.com/login/oauth/authorize?scope=read:user%20repo&client_id=${clientID}`).mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect.mdl-button--accent.homepage-center Authenticate
+                br
+                img(src='/assets/octocat.png' width='50%').homepage-center
+            div.mdl-layout-spacer.homepage-center

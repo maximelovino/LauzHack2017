@@ -6,6 +6,7 @@ html(lang="en")
         script(type="text/javascript").
             $(document).ready(function () {
                 let tasks = !{work};
+                let userFromDB = !{userDB};
                 console.log(tasks);
                 let evts = [];
 
@@ -87,6 +88,8 @@ html(lang="en")
                     allDaySlot: false,
                     timeFormat: 'H:mm',
                     firstHour: '06:00:00',
+                    minTime: userFromDB.min,
+                    maxTime: userFromDB.max,
                     events: evts,
                     editable: true,
                     droppable: true, // this allows things to be dropped onto the calendar

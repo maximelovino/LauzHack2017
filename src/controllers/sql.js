@@ -14,6 +14,18 @@ const mySQLOptions = {
 
 let connection = mysql.createConnection(mySQLOptions);
 
+exports.updateSettings = (user_id,min_time, max_time) => {
+	let sql = "UPDATE users SET min = ?, max = ? WHERE id = ? ";
+	connection.query(sql, [min_time, max_time,user_id], (error, results, fields) => {
+		if(error){
+			console.log("Can't update settings");
+			console.log(error);
+		}else{
+			console.log(`Settings updated for ${user_id}`);
+		}
+	})
+}
+
 exports.insertUser = (id) => {
 	let sql = "INSERT INTO users (id) VALUES (?)";
 	connection.query(sql,[id], (error, results, fields) => {
@@ -25,14 +37,14 @@ exports.insertUser = (id) => {
 	});
 };
 
-exports.getUser = (id) => {
+exports.getUser = (id, callback) => {
     let sql = "SELECT * FROM users WHERE id = ?";
     connection.query(sql, [id], (error, results, fields) => {
         if(error) {
             throw error;
         } else {
-            console.log(results);
-            return results;
+            console.log(results[0]);
+            callback(results[0]);
         }
     });
 };

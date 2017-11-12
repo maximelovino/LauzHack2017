@@ -33,12 +33,15 @@ app.get('/', (req, res) => {
 			github.getIssuesByRepo(req, (issuesByRep) => {
                 db.insertUser(user.id);
 				db.getWork(user.id, (work) => {
-                    let params = {
-                        'user': user,
-                        'repos': issuesByRep,
-                        'work': JSON.stringify(work)
-                    };
-                    res.render('main', params);
+                    db.getUser(user.id, (userFromDB) => {
+                        let params = {
+                            'user': user,
+							'userDB': JSON.stringify(userFromDB),
+                            'repos': issuesByRep,
+                            'work': JSON.stringify(work)
+                        };
+                        res.render('main', params);
+					});
 				});
 			})
 		});
@@ -101,8 +104,28 @@ app.get('/settings', (req, res) => {
     if (!req.session.access_token){
     	res.redirect('/');
 	}else{
-        res.render('settings');
+		github.getConnectedUser(req,(user) => {
+			db.getUser(user.id, (userFromDB) => {
+				console.log(userFromDB);
+				const userToSend = JSON.stringify(userFromDB);
+				console.log(userToSend);
+				res.render('settings', {'user':userToSend});
+			});
+		})
     }
+});
+
+app.post('/settings', (req,res) => {
+	if(!req.session.access_token){
+		res.redirect('/');
+	}else{
+		github.getConnectedUser(req, (user) => {
+			const minTime = req.body.min;
+			const maxTime = req.body.max;
+			db.updateSettings(user.id, minTime, maxTime);
+			res.redirect('/');
+		})
+	}
 });
 
 app.get('/user',(req,res) => {
