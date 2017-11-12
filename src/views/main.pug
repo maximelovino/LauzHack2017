@@ -193,6 +193,33 @@ html(lang="en")
                             .always(function () {
                                 console.log("complete");
                             });
+                    },
+                    eventRender: function (event, element) {
+                        element.find('.fc-content').prepend("<i class=\"material-icons closeon\">delete</i>");
+                        element.find(".closeon").click(function () {
+                            console.log(event);
+                            $.ajax({
+                                url: "/work",
+                                type: 'DELETE',
+                                data: {
+                                    issue_id: event.issue_id,
+                                    start: event.start.format('YYYY-MM-DD HH:mm:ss')
+                                }
+
+                            })
+                                .done(function () {
+                                    console.log("success");
+                                })
+                                .fail(function () {
+                                    alert("error");
+                                })
+                                .always(function () {
+                                    console.log("complete");
+                                });
+
+                            $('#calendar').fullCalendar('removeEvents', event._id);
+
+                        });
                     }
                 });
 

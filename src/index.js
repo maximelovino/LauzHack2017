@@ -73,14 +73,15 @@ app.put('/work', (req, res) => {
     });
 });
 
-app.delete('/work/:user_id/:issue_id/:old_start', (req, res) => {
-	console.log(req.params('user_id'));
-	console.log(req.params('issue_id'));
-	console.log(req.params('old_start'));
-	db.deleteWork(req.params('user_id'), req.params('issue_id'), req.params('old_start'), (result) => {
-		console.log(result);
-		res.sendStatus(200);
-	});
+app.delete('/work', (req, res) => {
+	console.log(req.params);
+    github.getConnectedUser(req, (user) => {
+        db.deleteWork(user.id, req.body.issue_id, req.body.start, (result) => {
+            console.log(result);
+            res.sendStatus(200);
+        });
+    });
+
 });
 
 app.get('/testsql', (req, res) => {

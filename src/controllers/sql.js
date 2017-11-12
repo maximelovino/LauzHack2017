@@ -86,9 +86,9 @@ exports.updateWork = (user_id, issue_id, old_start, start, end, callback) => {
     });
 };
 
-exports.deleteWork = (user_id, issue_id, old_start, callback) => {
+exports.deleteWork = (user_id, issue_id, start, callback) => {
     let sql = "DELETE FROM users_issues WHERE user_id = ? AND issue_id = ? AND start = ?";
-    connection.query(sql, [user_id, issue_id, old_start], (error, results, fields) => {
+    connection.query(sql, [user_id, issue_id, start], (error, results, fields) => {
         if(error) {
             throw error;
         } else {
