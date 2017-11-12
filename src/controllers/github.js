@@ -23,7 +23,6 @@ exports.getTokenAndStore = (req,res) => {
 
 	request(requestOptions,(error,response,body) => {
 		if (!error && response.statusCode == 200) {
-			console.log(body);
 			const token = JSON.parse(body).access_token;
 			req.session.access_token = token;
 			res.redirect('/')
@@ -45,7 +44,6 @@ exports.getConnectedUser = (req,callback) => {
 
 	request(requestOptions, (error, response, body) =>{
 		if(!error && response.statusCode == 200){
-			console.log(body);
 			callback(JSON.parse(body));
 		} else {
 			console.error("PROBLEM getting user");
@@ -59,7 +57,6 @@ function getRepos(req,callbackForRepos){
 	let repos = [];
 
 	function getOnePage(url, callback){
-		console.log(`One page function url: ${url}`);
 		const requestOptions = {
 			method: 'GET',
 			uri: url,
@@ -74,7 +71,6 @@ function getRepos(req,callbackForRepos){
 
 				let rep = JSON.parse(body);
 				repos = [...repos,...rep];
-				console.log(response.headers.link);
 				if (response.headers.link){
 					const nextUrl = response.headers.link.split(',')[0].split(';')[0].slice(1, -1);
 					const rel = response.headers.link.split(',')[0].split(';')[1].split('=')[1].slice(1,-1);
@@ -109,7 +105,6 @@ function getIssuesForARepo(req, i, repo, callBackForIssuesForRepo){
 	let issues = [];
 
 	function getOnePage(url, callback){
-		console.log(`One page function url: ${url}`);
 		const requestOptions = {
 			method: 'GET',
 			uri: url,
@@ -124,7 +119,6 @@ function getIssuesForARepo(req, i, repo, callBackForIssuesForRepo){
 
 				let iss = JSON.parse(body);
 				issues = [...issues,...iss];
-				console.log(response.headers.link);
 				if (response.headers.link){
 					const nextUrl = response.headers.link.split(',')[0].split(';')[0].slice(1, -1);
 					const rel = response.headers.link.split(',')[0].split(';')[1].split('=')[1].slice(1,-1);
@@ -155,7 +149,6 @@ function getIssuesForARepo(req, i, repo, callBackForIssuesForRepo){
 exports.getIssuesByRepo = (req, callbackForIssues) => {
 	function fromRepos(repos){
 		let reposWithIssues = repos.filter(r => r.open_issues !== 0);
-		console.log("We got the repos");
 		//callbackForIssues(reposWithIssues);
 
 		let issuesByRepo = [];
@@ -166,7 +159,6 @@ exports.getIssuesByRepo = (req, callbackForIssues) => {
 
 		for (var i = 0; i < reposWithIssues.length; i++) {
 			getIssuesForARepo(req,i,reposWithIssues[i],(issues,j) => {
-				console.log(`GOT THE ISSUES FOR ${j}`);
 				issuesByRepo[j] = issues;
 				if (issuesByRepo.filter(a => a !== undefined).length === reposWithIssues.length){
 					sendToCallback()

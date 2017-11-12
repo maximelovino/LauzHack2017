@@ -14,6 +14,17 @@ const mySQLOptions = {
 
 let connection = mysql.createConnection(mySQLOptions);
 
+exports.insertUser = (id) => {
+	let sql = "INSERT INTO users (id) VALUES (?)";
+	connection.query(sql,[id], (error, results, fields) => {
+		if (error){
+			console.log(`user ${id} already in db, or other problem`);
+		}else{
+			console.log(`user ${id} inserted in db`);
+		}
+	});
+};
+
 exports.getUser = (id) => {
     let sql = "SELECT * FROM users WHERE id = ?";
     connection.query(sql, [id], (error, results, fields) => {
