@@ -12,7 +12,6 @@ const bodyParser = require('body-parser');
 app.set('view engine', 'pug');
 app.set('view options', {"pretty":true});
 app.locals.pretty = true;
-
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(session({
@@ -21,11 +20,12 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
-
 app.use('/material', express.static(__dirname + '/node_modules/material-components-web/dist/'));
+
 app.use('/scripts', express.static(__dirname + '/scripts/'));
 app.use('/css', express.static(__dirname + '/css/'));
 app.use('/fullcalendar', express.static(__dirname + '/node_modules/fullcalendar/dist/'));
+app.use('/assets',express.static(__dirname + '/assets/'));
 
 app.get('/', (req, res) => {
 	if (req.session.access_token){
@@ -62,17 +62,13 @@ app.post('/work', (req, res) => {
 
 });
 
-app.put('/work/:user_id/:issue_id/:old_start/:start/:end', (req, res) => {
-    console.log(req.params('user_id'));
-    console.log(req.params('issue_id'));
-    console.log(req.params('old_start'));
-    console.log(req.params('start'));
-    console.log(req.params('end'));
-    db.updateWork(req.params('user_id'), req.params('issue_id'), req.params('old_start'), req.params('start'), req.params('end'), 	(result) => {
-    	console.log(result);
-        res.sendStatus(200);
-	});
-
+app.put('/work', (req, res) => {
+    github.getConnectedUser(req, (user) => {
+        db.updateWork(user.id, req.body.issue_id, req.body.old_start, req.body.start, req.body.end, (result) => {
+            console.log(result);
+            res.sendStatus(200);
+        });
+    });
 });
 
 app.delete('/work/:user_id/:issue_id/:old_start', (req, res) => {

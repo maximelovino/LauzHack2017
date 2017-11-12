@@ -4,33 +4,35 @@ html(lang="en")
     body
         script(type="text/javascript" src="/scripts/search.js")
         script(type="text/javascript").
-            $(document).ready(function() {
+            $(document).ready(function () {
                 let tasks = !{work};
                 console.log(tasks);
                 let evts = [];
 
                 let repos = !{JSON.stringify(repos)};
 
-                tasks.forEach(function(item, index) {
+                tasks.forEach(function (item, index) {
 
                     let repo = null;
                     let issue = null;
-                    repos.forEach(function(rep) {
-                        rep.issues.forEach(function(i) {
-                            if(i.id === item.issue_id) {
+                    repos.forEach(function (rep) {
+                        rep.issues.forEach(function (i) {
+                            if (i.id === item.issue_id) {
                                 repo = rep;
                                 issue = i;
                             }
                         });
                     });
 
-                    if(repo != null && issue != null) {
+                    if (repo != null && issue != null) {
                         evts.push({
                             repo: repo.repo.name,
-                            title: repo.repo.name +"/"+issue.title,
+                            title: repo.repo.name + "/" + issue.title,
                             stick: true,
-                            start: item.start,
-                            end: item.end,
+                            start: moment(item.start),
+                            end: moment(item.end),
+                            issue_id: parseInt(item.issue_id),
+                            duration: moment(item.end).subtract(item.start)
 
                         });
                     }
@@ -47,9 +49,10 @@ html(lang="en")
                         return a === 1;
                     }).text();
                     // store data so the calendar knows to render an event upon drop
+                    console.log($(this).data('id'));
                     $(this).data('event', {
-                        repo: repo,
-                        id: $(this).data('id'),
+                        issue_id: parseInt($(this).data('id')),
+                        duration: moment('2:00:00'),
                         title: repo + "/" + name, // use the element's text as the event title
                         stick: true, // maintain when user navigates (see docs on the renderEvent method)
 
@@ -71,7 +74,6 @@ html(lang="en")
 
                 /* initialize the calendar
                 -----------------------------------------------------------------*/
-
                 $('#calendar').fullCalendar({
                     header: {
                         left: 'prev,next today',
@@ -87,21 +89,86 @@ html(lang="en")
                     events: evts,
                     editable: true,
                     droppable: true, // this allows things to be dropped onto the calendar
-                    eventResize: function (event, jsEvent, ui, view) {
-                        console.log("resize");
+                    eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
+                        console.log("rezise");
                         console.log(event);
+                        console.log(delta);
+                        let issue_id = parseInt(event.issue_id);
+                        let start = event.start.format('YYYY-MM-DD HH:mm:ss');
+                        let end = event.end.format('YYYY-MM-DD HH:mm:ss');
+                        event.duration = moment(end).subtract(start);
+                        console.log("duration update");
+                        console.log(event);
+                        console.log(
+                            {
+                                issue_id: issue_id,
+                                old_start: start,
+                                start: start,
+                                end: end
+                            });
+                        $.ajax({
+                            url: "/work/",
+                            type: 'PUT',
+                            data: {
+                                issue_id: issue_id,
+                                old_start: start,
+                                start: start,
+                                end: end
+                            }
+
+                        })
+                            .done(function () {
+                                console.log("success");
+                            })
+                            .fail(function () {
+                                alert("error");
+                            })
+                            .always(function () {
+                                console.log("complete");
+                            });
                     },
-                    eventDrop: function (event, jsEvent, ui, view) {
+                    eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
                         console.log("drag");
                         console.log(event);
+                        console.log(delta);
+                        let issue_id = parseInt(event.issue_id);
+                        let old_start = moment(event.start).subtract(delta).format('YYYY-MM-DD HH:mm:ss');
+                        let start = event.start.format('YYYY-MM-DD HH:mm:ss');
+                        let end = moment(event.start).add(event.duration).format('YYYY-MM-DD HH:mm:ss');
+                        console.log(
+                            {
+                                issue_id: issue_id,
+                                old_start: old_start,
+                                start: start,
+                                end: end
+                            });
+                        $.ajax({
+                            url: "/work/",
+                            type: 'PUT',
+                            data: {
+                                issue_id: issue_id,
+                                old_start: old_start,
+                                start: start,
+                                end: end
+                            }
+
+                        })
+                            .done(function () {
+                                console.log("success");
+                            })
+                            .fail(function () {
+                                alert("error");
+                            })
+                            .always(function () {
+                                console.log("complete");
+                            });
                     },
                     drop: function (date, jsEvent, ui, resourceId) {
-                        console.log($(this).data('repo'));
                         let id = $(this).data('id');
                         console.log(id);
-                        let start = date.format('YYYY/MM/DD HH:mm:ss');
+                        let start = date.format('YYYY-MM-DD HH:mm:ss');
                         console.log(start);
-                        let end = date.clone().add(2, 'hours').format('YYYY/MM/DD HH:mm:ss');
+                        let end = date.clone().add(2, 'hours').format('YYYY-MM-DD HH:mm:ss');
                         console.log(end);
                         $.ajax({
                             url: "/work",
@@ -122,8 +189,6 @@ html(lang="en")
                             .always(function () {
                                 console.log("complete");
                             });
-
-
                     }
                 });
 

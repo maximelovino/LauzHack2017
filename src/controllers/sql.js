@@ -62,7 +62,8 @@ exports.insertWork = (user_id, issue_id, start, end, callback) => {
 };
 
 exports.updateWork = (user_id, issue_id, old_start, start, end, callback) => {
-    let sql = "UPDATE users_issues SET start = ?, end = ? WHERE user_id = ?, issue_id = ?, start = ?";
+    let sql = "UPDATE users_issues SET start = ?, end = ? WHERE user_id = ? AND issue_id = ? AND start = ?";
+    console.log([start, end, user_id, issue_id, old_start]);
     connection.query(sql, [start, end, user_id, issue_id, old_start], (error, results, fields) => {
         if(error) {
             throw error;
@@ -74,7 +75,7 @@ exports.updateWork = (user_id, issue_id, old_start, start, end, callback) => {
 };
 
 exports.deleteWork = (user_id, issue_id, old_start, callback) => {
-    let sql = "DELETE FROM users_issues WHERE user_id = ?, issue_id = ?, start = ?";
+    let sql = "DELETE FROM users_issues WHERE user_id = ? AND issue_id = ? AND start = ?";
     connection.query(sql, [user_id, issue_id, old_start], (error, results, fields) => {
         if(error) {
             throw error;
