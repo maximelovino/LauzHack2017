@@ -1,11 +1,23 @@
-doctype html
-html(lang="en")
-    include head.pug
-    body
-        form
-            div(class="mdl-textfield mdl-js-textfield")
-                input(class="mdl-textfield__input" type="time" id="min" name="min")
-                label(class="mdl-textfield__label" for="min") min
-            div(class="mdl-textfield mdl-js-textfield")
-                input(class="mdl-textfield__input" type="time" id="max" name="max")
-                label(class="mdl-textfield__label" for="max") max
+include head.pug
+body
+    div(class="th-layout mdl-layout mdl-js-layout mdl-layout--fixed-header")
+        header(class="th-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600")
+            div(class="mdl-layout__header-row")
+                a(class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" href="/" id="hdrbtn")
+                    i(class="material-icons") arrow_back
+                span(class="mdl-layout-title") TaskHub - Settings
+        main(class="mdl-layout mdl-color--grey-100")
+            div.demo-card-wide.mdl-card.mdl-shadow--2dp.center-card
+                div.mdl-card__title
+                    h2.mdl-card__title-text Personnal Settings
+                div(class="mdl-card__supporting-text")
+                    form(action="#")
+                        div(class="mdl-textfield mdl-js-textfield")
+                            p Start Hour
+                            input(class="mdl-textfield__input" type="time" id="min" name="min")
+                        div(class="mdl-textfield mdl-js-textfield")
+                            p End Hour
+                            input(class="mdl-textfield__input" type="time" id="max" name="max")
+                        div.mdl-card__actions.mdl-card--border
+                            input(class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" type="submit")
+                div.mdl-layout-spacer

@@ -40,7 +40,6 @@ app.get('/', (req, res) => {
                     };
                     res.render('main', params);
 				});
-
 			})
 		});
 	}else{

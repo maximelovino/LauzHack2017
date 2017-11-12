@@ -98,3 +98,11 @@ html, body {
 .th-content {
   max-width: 1080px;
 }
+
+.full-frame {
+    min-height: 100%;
+}
+
+.center-card {
+    margin: auto;
+}
