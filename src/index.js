@@ -103,7 +103,11 @@ app.get('/thomas', (req,res) => {
 });
 
 app.get('/settings', (req, res) => {
-    res.render('settings');
+    if (!req.session.access_token){
+    	res.redirect('/');
+	}else{
+        res.render('settings');
+    }
 });
 
 app.get('/user',(req,res) => {
