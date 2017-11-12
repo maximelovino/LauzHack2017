@@ -79,6 +79,8 @@ $(document).ready(function () {
         firstHour: '06:00:00',
         minTime: userFromDB.min,
         maxTime: userFromDB.max,
+        eventOverlap: false,
+        contentHeight: "auto",
         events: evts,
         editable: true,
         droppable: true, // this allows things to be dropped onto the calendar

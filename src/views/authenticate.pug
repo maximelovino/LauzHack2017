@@ -1,5 +1,10 @@
 include head.pug
 body
+    script(type="text/javascript").
+        function show(element){
+            $(element).prop('disabled', true);
+            $('div.mdl-spinner.mdl-js-spinner').addClass('is-active');
+        }
     div(class="th-layout mdl-layout mdl-js-layout mdl-layout--fixed-header")
         header(class="th-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600")
             div(class="mdl-layout__header-row")
@@ -8,7 +13,11 @@ body
             div.homepage-center
                 h1.homepage-center Welcome to TaskHub
                 h3.homepage-center You have to authenticate on Github
-                a(href=`https://github.com/login/oauth/authorize?scope=read:user%20repo&client_id=${clientID}`).mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect.mdl-button--accent.homepage-center Authenticate
+                a(href=`https://github.com/login/oauth/authorize?scope=read:user%20repo&client_id=${clientID}` onclick="show(this)").mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect.mdl-button--accent.homepage-center Authenticate
+                br
+                br
+                br
+                div.mdl-spinner.mdl-js-spinner
                 br
                 img(src='/assets/octocat.png' width='50%').homepage-center
             div.mdl-layout-spacer.homepage-center
