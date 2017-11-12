@@ -4,8 +4,36 @@ html(lang="en")
     body
         script(type="text/javascript" src="/scripts/search.js")
         script(type="text/javascript").
-            $(document).ready(function () {
-                let test = !{work};
+            $(document).ready(function() {
+                let tasks = !{work};
+                console.log(tasks);
+                let evts = [];
+
+                let repos = !{JSON.stringify(repos)};
+
+                tasks.forEach(function(item, index) {
+
+                    let repo = null;
+                    let issue = null;
+                    repos.forEach(function(rep) {
+                        rep.issues.forEach(function(i) {
+                            if(i.id === item.issue_id) {
+                                repo = rep;
+                                issue = i;
+                            }
+                        });
+                    });
+
+                    if(repo != null && issue != null) {
+                        evts.push({
+                            repo: repo.repo.name,
+                            title: repo.repo.name +"/"+issue.title,
+                            stick: true,
+                            start: item.start,
+                            end: item.end
+                        });
+                    }
+                });
 
                 /* initialize the external events
                 -----------------------------------------------------------------*/
@@ -55,6 +83,7 @@ html(lang="en")
                     slotDuration: '00:15:00',
                     allDaySlot: false,
                     timeFormat: 'H:mm',
+                    events: evts,
                     editable: true,
                     droppable: true, // this allows things to be dropped onto the calendar
                     eventResize: function (event, jsEvent, ui, view) {
@@ -128,7 +157,7 @@ html(lang="en")
                         label(class="mdl-button mdl-js-button mdl-button--icon" for="search")
                             i(class="material-icons") search
                         div(class="mdl-textfield__expandable-holder")
-                            input(class="mdl-textfield__input" type="text" id="search" onkeyup="updateSearch()")
+                            input(class="mdl-textfield__input" type="text" id="search" onkeyup="filterSideBar(matchText)")
                             label(class="mdl-textfield__label" for="search") Type your issue name
 
                 nav(class="th-navigation mdl-navigation mdl-color--blue-grey-800" id="external-events")

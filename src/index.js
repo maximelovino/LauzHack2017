@@ -104,8 +104,8 @@ app.get('/thomas', (req,res) => {
 	});
 });
 
-app.get('/config', (req, res) => {
-    res.render('config');
+app.get('/settings', (req, res) => {
+    res.render('settings');
 });
 
 app.get('/user',(req,res) => {
